@@ -1,10 +1,10 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// SINTETIZZATORE AUDIO 8-BIT
+// AUDIO 8-BIT
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
-let gameStarted = false; // Stato per la schermata iniziale
+let gameStarted = false;
 
 function initAudio() {
     if (!audioCtx) {
@@ -190,7 +190,7 @@ function draw() {
         ctx.strokeRect(n.x, n.y, n.w, n.h);
     });
 
-    // SCHERMATA INIZIALE "CLICK TO PLAY" (Richiesta dalle linee guida per l'audio)
+    // schermata iniziale
     if (!gameStarted) {
         ctx.fillStyle = "rgba(10, 0, 20, 0.9)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -205,7 +205,7 @@ function draw() {
         ctx.fillStyle = "#ffff00";
         ctx.shadowColor = "#ffff00";
         ctx.font = "10px 'Press Start 2P'";
-        ctx.fillText("CLICCA O PREMI UN TASTO", canvas.width / 2, canvas.height / 2 + 15);
+        ctx.fillText("CLICCA o PREMI UN TASTO", canvas.width / 2, canvas.height / 2 + 15);
         ctx.fillText("PER GIOCARE", canvas.width / 2, canvas.height / 2 + 35);
         
         ctx.shadowBlur = 0;
