@@ -1,0 +1,62 @@
+/* Sfondo scuro anni '90 con scritte al neon */
+body {
+    background-color: #0d001a;
+    background-image: 
+        radial-gradient(circle at 50% 50%, #2a004f 0%, #000000 100%);
+    color: #00ffcc;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Titolo Neon stile Arcade */
+.arcade-title h1 {
+    color: #ff007f;
+    text-shadow: 
+        0 0 5px #ff007f,
+        0 0 10px #ff007f,
+        0 0 20px #ff007f,
+        0 0 40px #ff0055;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.arcade-title p {
+    color: #ffff00;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+/* Punteggio retro */
+.score-container h2 {
+    color: #00ffcc;
+    text-shadow: 0 0 8px #00ffcc;
+    font-size: 14px;
+    margin: 15px 0;
+}
+
+/* Effetto TV a tubo catodico (CRT) con linee di scansione */
+.crt-screen {
+    position: relative;
+    display: inline-block;
+    border: 6px solid #330066;
+    border-radius: 10px;
+    box-shadow: 0 0 25px #8800ff, inset 0 0 15px #000;
+}
+
+.crt-screen::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+#canvas {
+    background: #050010;
+    display: block;
+}
