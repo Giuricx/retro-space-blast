@@ -6,5 +6,3 @@ Un piccolo gioco arcade spaziale creato solo con HTML, CSS e JavaScript. Gli eff
 - **A / D**: Sposta la navicella a sinistra o a destra.
 - **SPAZIO**: Spara i laser al neon.
 - **R**: Riavvia la partita quando perdi.
-
-Creato come primo progetto mentre sperimentavo con il codice.
