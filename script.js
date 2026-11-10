@@ -1,9 +1,10 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// SINTETIZZATORE AUDIO 8-BIT NATIVO (Zero file esterni!)
+// SINTETIZZATORE AUDIO 8-BIT
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
+let gameStarted = false; // Stato per la schermata iniziale
 
 function initAudio() {
     if (!audioCtx) {
@@ -23,26 +24,20 @@ function playSound(type) {
     let now = audioCtx.currentTime;
 
     if (type === 'laser') {
-        // Suono laser stile arcade (frequenza che scende veloce)
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(600, now);
         osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
-        
         gainNode.gain.setValueAtTime(0.1, now);
         gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-        
         osc.start(now);
         osc.stop(now + 0.15);
     } 
     else if (type === 'explosion') {
-        // Suono esplosione / impatto cupo
         osc.type = 'square';
         osc.frequency.setValueAtTime(120, now);
         osc.frequency.exponentialRampToValueAtTime(30, now + 0.3);
-        
         gainNode.gain.setValueAtTime(0.15, now);
         gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        
         osc.start(now);
         osc.stop(now + 0.3);
     }
@@ -73,7 +68,12 @@ for (let i = 0; i < 40; i++) {
 }
 
 window.addEventListener("keydown", function(e) {
-    initAudio(); // Attiva l'audio al primo tasto premuto
+    initAudio();
+    if (!gameStarted) {
+        gameStarted = true; // Fa partire il gioco al primo tasto
+        return;
+    }
+    
     tasti[e.key] = true;
     
     if (gameOver && (e.key === "r" || e.key === "R")) {
@@ -85,9 +85,17 @@ window.addEventListener("keyup", function(e) {
     tasti[e.key] = false;
 });
 
+// Permette di avviare il gioco anche cliccando direttamente sul canvas col mouse
+canvas.addEventListener("click", function() {
+    initAudio();
+    if (!gameStarted) {
+        gameStarted = true;
+    }
+});
+
 // Spawner nemici
 setInterval(function() {
-    if (gameOver) return;
+    if (!gameStarted || gameOver) return;
     nemici.push({
         x: Math.random() * 360,
         y: -30,
@@ -98,7 +106,7 @@ setInterval(function() {
 }, 800);
 
 function update() {
-    if (gameOver) return;
+    if (!gameStarted || gameOver) return;
 
     stelle.forEach(s => {
         s.y += s.speed;
@@ -108,10 +116,9 @@ function update() {
     if (tasti["a"] && playerX > 0) playerX -= 6;
     if (tasti["d"] && playerX < canvas.width - playerW) playerX += 6;
 
-    // Sparo con suono laser
     if (tasti[" "] && !tasti.sparaPremuto) {
         bullets.push({x: playerX + playerW/2 - 2, y: playerY, vy: -9});
-        playSound('laser'); // suono laser
+        playSound('laser');
         tasti.sparaPremuto = true;
         setTimeout(() => tasti.sparaPremuto = false, 180);
     }
@@ -125,7 +132,6 @@ function update() {
         nemici[i].y += nemici[i].speed;
         let n = nemici[i];
 
-        // Collisione Nemico-Player (Game Over)
         if (
             n.x < playerX + playerW &&
             n.x + n.w > playerX &&
@@ -133,17 +139,16 @@ function update() {
             n.y + n.h > playerY
         ) {
             gameOver = true;
-            playSound('explosion'); // suono esplosione
+            playSound('explosion');
         }
 
-        // Collisione Proiettile-Nemico
         for (let j = bullets.length - 1; j >= 0; j--) {
             let b = bullets[j];
             if (b.x < n.x + n.w && b.x + 4 > n.x && b.y < n.y + n.h && b.y + 12 > n.y) {
                 nemici.splice(i, 1);
                 bullets.splice(j, 1);
-                score += 100;
-                playSound('explosion'); // suono eslosioni
+                score += 150;
+                playSound('explosion');
                 document.getElementById("score").innerText = "SCORE: " + String(score).padStart(6, '0');
                 break;
             }
@@ -185,6 +190,29 @@ function draw() {
         ctx.strokeRect(n.x, n.y, n.w, n.h);
     });
 
+    // SCHERMATA INIZIALE "CLICK TO PLAY" (Richiesta dalle linee guida per l'audio)
+    if (!gameStarted) {
+        ctx.fillStyle = "rgba(10, 0, 20, 0.9)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#00ffcc";
+        ctx.font = "16px 'Press Start 2P'";
+        ctx.textAlign = "center";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "#00ffcc";
+        ctx.fillText("RETRO SPACE BLAST", canvas.width / 2, canvas.height / 2 - 30);
+
+        ctx.fillStyle = "#ffff00";
+        ctx.shadowColor = "#ffff00";
+        ctx.font = "10px 'Press Start 2P'";
+        ctx.fillText("CLICCA O PREMI UN TASTO", canvas.width / 2, canvas.height / 2 + 15);
+        ctx.fillText("PER GIOCARE", canvas.width / 2, canvas.height / 2 + 35);
+        
+        ctx.shadowBlur = 0;
+        ctx.textAlign = "start";
+    }
+
+    // Schermata GAME OVER
     if (gameOver) {
         ctx.fillStyle = "rgba(10, 0, 20, 0.85)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -199,7 +227,7 @@ function draw() {
         ctx.fillStyle = "#ffff00";
         ctx.shadowColor = "#ffff00";
         ctx.font = "10px 'Press Start 2P'";
-        ctx.fillText("PRESS 'R' TO RESTART", canvas.width / 2, canvas.height / 2 + 30);
+        ctx.fillText("PREMI 'R' PER RIGIOCARE", canvas.width / 2, canvas.height / 2 + 30);
         
         ctx.shadowBlur = 0;
         ctx.textAlign = "start";
