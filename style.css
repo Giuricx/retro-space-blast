@@ -10,7 +10,7 @@ body {
     padding: 20px;
 }
 
-/* Titolo Neon stile Arcade */
+/* Titolo */
 .arcade-title h1 {
     color: #ff007f;
     text-shadow: 
@@ -28,7 +28,7 @@ body {
     letter-spacing: 1px;
 }
 
-/* Punteggio retro */
+/* Punteggio */
 .score-container h2 {
     color: #00ffcc;
     text-shadow: 0 0 8px #00ffcc;
