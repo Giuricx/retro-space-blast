@@ -1,8 +1,8 @@
 # Retro Space Blast 1999
 
-Un piccolo gioco arcade spaziale creato solo con HTML, CSS e JavaScript. Gli effetti sonori 8-bit vengono generati direttamente dal browser.
+A small space-themed arcade game built using only HTML, CSS, and JavaScript. The 8-bit sound effects are generated directly within the browser.
 
-## Come si gioca
-- **A / D**: Sposta la navicella a sinistra o a destra.
-- **SPAZIO**: Spara i laser al neon.
-- **R**: Riavvia la partita quando perdi.
+## How to Play
+- **A / D**: Move the spaceship left or right.
+- **SPACE**: Fire neon lasers.
+- **R**: Restart the game after a loss.
